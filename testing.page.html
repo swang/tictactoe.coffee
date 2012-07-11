@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	 
+  	<title>Tic Tac Toe Test!</title>
+  	<style>
+  	  #testOutput { font-family: helvetica; }
+  	  .true { color: green; }
+  	  .false { color: red; }
+   	</style>
+  	
+  </head>
+
+  <body>
+    <h1>Test Results</h1>
+    <div id="testOutput">
+    </div>
+  
+  </body>
+  <script src="js/jquery.min.js"></script>
+  
+  <script src="js/tictactoe.ai.js?arg=3"></script>
+  <script src="js/tictactoe.draw.js?r=3"></script>
+  <script>
+    var system = tictactoe.ai,
+        draw = tictactoe.draw
+    function testAllWinningBoards() {
+    
+      return  system.winner([1,1,1,0,0,0,0,0,0],1) == true &&
+              system.winner([0,0,0,1,1,1,0,0,0],1) == true &&
+              system.winner([0,0,0,0,0,0,1,1,1],1) == true &&
+              system.winner([1,0,0,1,0,0,1,0,0],1) == true &&
+              system.winner([0,1,0,0,1,0,0,1,0],1) == true &&
+              system.winner([0,0,1,0,0,1,0,0,1],1) == true &&
+              system.winner([1,0,0,0,1,0,0,0,1],1) == true &&
+              system.winner([0,0,1,0,1,0,1,0,0],1) == true
+    }
+    function testAllLosingBoards() {
+      return  system.loser([1,1,1,0,0,0,0,0,0],-1) == true &&
+              system.loser([0,0,0,1,1,1,0,0,0],-1) == true &&
+              system.loser([0,0,0,0,0,0,1,1,1],-1) == true &&
+              system.loser([1,0,0,1,0,0,1,0,0],-1) == true &&
+              system.loser([0,1,0,0,1,0,0,1,0],-1) == true &&
+              system.loser([0,0,1,0,0,1,0,0,1],-1) == true &&
+              system.loser([1,0,0,0,1,0,0,0,1],-1) == true &&
+              system.loser([0,0,1,0,1,0,1,0,0],-1) == true
+    }
+    function testOccupyReturnsFalseForOccupiedPositions() {
+      system.occupy(0)
+      system.occupy(1)
+      return !(system.occupy(0) || system.occupy(1) || !system.occupy(2))
+    }
+    function testSameArray( array1, array2) {
+      if (array1.length != array2.length) {
+        return false
+      }
+      array1 = array1.sort(function(a,b) { return a-b })
+      array2 = array2.sort(function(a,b) { return a-b })
+      for (var c = 0; c < array1.length; c++) {
+        if (array1[c] != array2[c]) {
+          return false
+        }
+        
+      }
+      return true
+        
+    }
+    function testGetFreePositions() {
+      return  testSameArray( system.getFreePositions([0,0,0,0,0,0,0,0,0]), [0,1,2,3,4,5,6,7,8] ) &&
+              testSameArray( system.getFreePositions([1,0,0,0,0,0,0,0,0]), [  1,2,3,4,5,6,7,8] ) &&
+              testSameArray( system.getFreePositions([1,1,0,0,0,0,0,0,0]), [    2,3,4,5,6,7,8] ) &&
+              testSameArray( system.getFreePositions([1,1,1,0,0,0,0,0,0]), [      3,4,5,6,7,8] ) &&
+              testSameArray( system.getFreePositions([0,0,0,0,0,0,1,1,1]), [      0,1,2,3,4,5] )
+    }
+    
+    var tests = [testAllWinningBoards, testAllLosingBoards, testOccupyReturnsFalseForOccupiedPositions,testGetFreePositions ], 
+        res
+    
+    
+    for (var i = 0; i < tests.length; i++) {
+      res = tests[i]()
+      $('#testOutput').append("<div class="+res.toString()+">" + tests[i].name.toString() + ": " + res + "</div>")
+    }
+    
+  </script>
+</html>
