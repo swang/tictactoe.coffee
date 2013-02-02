@@ -1,8 +1,7 @@
-root = this
-root.tictactoe = {} unless root.tictactoe
+tictactoe = tictactoe or {}
 $ = jQuery
 
-root.tictactoe.draw = do ($) ->
+tictactoe.draw = do ($) ->
 
   context = undefined
   # canvas = `undefined`

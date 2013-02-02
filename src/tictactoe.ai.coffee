@@ -3,13 +3,11 @@ Array::count = (item) ->
   count++ for c in this when c is item
   return count
 
-root = this
-root.tictactoe = {} unless root.tictactoe
+tictactoe = tictactoe or {}
 
 $ = jQuery
 
-root.tictactoe.ai = do ($) ->
-
+tictactoe.ai = do ($) ->
   # board locations are referenced like this:
   #[0,1,2
   # 3,4,5
