@@ -18,9 +18,13 @@
       return draw.newGameButton();
     });
     $.fn.center = function() {
+      var horizMidPt, vertMidPt, win;
+      win = $(window);
+      vertMidPt = ((win.height() - this.outerHeight()) / 2) + win.scrollTop();
+      horizMidPt = ((win.width() - this.outerWidth()) / 2) + win.scrollLeft();
       this.css("position", "absolute");
-      this.css("top", (($(window).height() - this.outerHeight()) / 2) + $(window).scrollTop() + "px");
-      this.css("left", (($(window).width() - this.outerWidth()) / 2) + $(window).scrollLeft() + "px");
+      this.css("top", vertMidPt + "px");
+      this.css("left", horizMidPt + "px");
       return this;
     };
     $(window).bind('resize', function() {
