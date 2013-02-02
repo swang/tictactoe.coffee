@@ -1,28 +1,31 @@
 Array::count = (item) ->
   count = 0
   count++ for c in this when c is item
-  count
+  return count
 
 root = this
 root.tictactoe = {} unless root.tictactoe
+
 $ = jQuery
 
-root.tictactoe.ai = do($) ->
+root.tictactoe.ai = do ($) ->
 
   # board locations are referenced like this:
   #[0,1,2
   # 3,4,5
   # 6,7,8]
 
-  config =
+  config = {
     rows: 3
     cols: 3
     numToWin: 3
     ply: 4
+  }
 
-  players =
+  players = {
     cross:  -1
     naughts: 1
+  }
 
   board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -50,9 +53,9 @@ root.tictactoe.ai = do($) ->
   occupy = (location) ->
     if (getFreePositions().indexOf(location) isnt -1)
        board[location] = toMove()
-       true
+       return true
     else
-       false
+       return false
 
   # function clear
   #
@@ -70,7 +73,7 @@ root.tictactoe.ai = do($) ->
   # output: true if input is a board, false if its not
 
   isBoard = (board) ->
-    board.length is 9 and board != `undefined`
+    board.length is 9 and board?
 
   # function getFreePositions
   #
@@ -79,7 +82,7 @@ root.tictactoe.ai = do($) ->
   # output: an array of open positions
 
   getFreePositions = (boardState = board) ->
-    moves = (idx for move,idx in boardState when move is 0)
+    moves = (idx for move, idx in boardState when move is 0)
 
   # function terminalTest
   #
@@ -97,7 +100,7 @@ root.tictactoe.ai = do($) ->
   # output: true if player has won
 
   winner = (boardState, player) ->
-    if player is undefined
+    if not player?
       player = boardState
       boardState = board
 
@@ -125,12 +128,12 @@ root.tictactoe.ai = do($) ->
   #         returns [-1,-1] if not found
 
   winnerWhere = (boardState = board, player) ->
-    if player is undefined
+    if not player?
       player = boardState
       boardState = board
     r = 0 
     while (r < config.rows)
-      return [r*config.rows,(r*config.rows)+config.rows-1] if boardState.slice(r*config.rows,(r*config.rows)+config.rows).count(player) is config.numToWin
+      return [r*config.rows,(r*config.rows)+config.rows - 1] if boardState.slice(r * config.rows,(r*config.rows) + config.rows).count(player) is config.numToWin
       r++
 
     c = 0
@@ -138,12 +141,12 @@ root.tictactoe.ai = do($) ->
       iters = 0
       csub = c
       col = []
-      while (csub < boardState.length && iters < config.numToWin)
+      while (csub < boardState.length and iters < config.numToWin)
         col.push( boardState[csub] )
         iters++
         csub += config.cols
       if (col.count(player) is config.numToWin)
-        return [c, c+(config.cols*(config.numToWin-1))]
+        return [c, c+(config.cols*(config.numToWin - 1))]
       c++
 
     # written this way so it can handle any sized tictactoe configuration and
@@ -157,9 +160,10 @@ root.tictactoe.ai = do($) ->
         for dsub in [0..config.numToWin-1]
           diag1.push( boardState[(dr1*config.cols) + (dsub * (config.rows + 1))])
           diag2.push( boardState[(dr1*config.cols) + 2 + (dsub*(config.cols - 1))])
-
-        return [(dr1*config.cols) + (0*(config.rows+1)), (dr1*config.cols) + ((config.numToWin-1)*(config.rows+1))] if diag1.count(player) is config.numToWin
-        return [(dr1*config.cols) + 2 +(0*(config.cols-1)),(dr1*config.cols) + 2 +((config.numToWin-1)*(config.cols-1))] if diag2.count(player) is config.numToWin
+        if diag1.count(player) is config.numToWin
+          return [(dr1*config.cols) + (0*(config.rows+1)), (dr1*config.cols) + ((config.numToWin-1)*(config.rows+1))]
+        if diag2.count(player) is config.numToWin          
+          return [(dr1*config.cols) + 2 +(0*(config.cols-1)),(dr1*config.cols) + 2 + ((config.numToWin-1)*(config.cols-1))]
     return [-1,-1]
 
   # function utility
@@ -170,7 +174,7 @@ root.tictactoe.ai = do($) ->
 
   utility = (boardState, player) ->
 
-    if player is undefined
+    if not player?
       player = boardState
       boardState = board
 
@@ -181,24 +185,24 @@ root.tictactoe.ai = do($) ->
 
     r = 0
     while r < config.rows
-      row = boardState.slice(r*3,(r*3)+3)
-      if (row.count(player) > 0 && row.count(-player) == 0) 
+      row = boardState.slice(r * 3,(r * 3) + 3)
+      if (row.count(player) > 0 and row.count(-player) is 0) 
         score += markScore[row.count(player)]
-      else if (row.count(-player) > 0 && row.count(player) == 0)
+      else if (row.count(-player) > 0 and row.count(player) is 0)
         score -= markScore[row.count(-player)]
 
-      col = [ boardState[r],boardState[r+3],boardState[r+6] ]
-      if (col.count(player) > 0 && col.count(-player) == 0)
+      col = [ boardState[r],boardState[r + 3],boardState[r + 6] ]
+      if (col.count(player) > 0 and col.count(-player) is 0)
         score += markScore[ col.count(player) ]
-      else if (col.count(-player) > 0 && col.count(player) == 0)
+      else if (col.count(-player) > 0 and col.count(player) is 0)
         score -= markScore[col.count(-player)]
-      if (diag1.count(player) > 0 && diag1.count(-player) == 0)
+      if (diag1.count(player) > 0 and diag1.count(-player) is 0)
         score += markScore[ diag1.count(player) ]
-      else if (diag1.count(-player) > 0 && diag1.count(player) == 0)
+      else if (diag1.count(-player) > 0 and diag1.count(player) is 0)
         score -= markScore[ diag1.count(-player) ]
-      if (diag2.count(player) > 0 && diag2.count(-player) == 0)
+      if (diag2.count(player) > 0 and diag2.count(-player) is 0)
         score += markScore[ diag2.count(player) ]
-      else if (diag2.count(-player) > 0 && diag2.count(player) == 0)
+      else if (diag2.count(-player) > 0 and diag2.count(player) is 0)
         score -= markScore[ diag2.count(-player) ]    
       r++
     return score
@@ -213,7 +217,7 @@ root.tictactoe.ai = do($) ->
   chooseRandom = (state, player) ->
     possMoves = getFreePositions(state)
     result = possMoves[Math.floor(possMoves.length*Math.random())]
-    [player, 1, result]
+    return [player, 1, result]
 
   # function alphaBetaSearch
   #
@@ -243,7 +247,7 @@ root.tictactoe.ai = do($) ->
         result = tryMove
       newBoard[tryMove] = 0
 
-    [player, biggestValue, result]  
+    return [player, biggestValue, result]
 
   # function negaMax
   #
@@ -252,7 +256,7 @@ root.tictactoe.ai = do($) ->
   # output: the value of state's successors based on utility()
 
   negaMax = (state, depth, alpha, beta, player) ->
-    return utility(state, player) if (terminalTest(state) || depth == 0 || winner(state, player) || loser(state, player))
+    return utility(state, player) if (terminalTest(state) or depth is 0 or winner(state, player) or loser(state, player))
 
     possMoves = getFreePositions(state)
     newBoard = state.slice(0)
@@ -263,7 +267,7 @@ root.tictactoe.ai = do($) ->
       return val if (val >= beta)
       alpha = Math.max(val, alpha)
       newBoard[tryMove] = 0
-    alpha
+    return alpha
 
   # function maxValue
   #
@@ -272,7 +276,7 @@ root.tictactoe.ai = do($) ->
   # output: the maximum value of state's successors based on utility()
 
   maxValue = (state, depth, alpha, beta, player, firstPlayer) ->
-    utility(state, firstPlayer) if (terminalTest(state) || depth is 0 || winner(state, firstPlayer) || loser(state,firstPlayer))
+    utility(state, firstPlayer) if (terminalTest(state) or depth is 0 or winner(state, firstPlayer) or loser(state,firstPlayer))
     v = -Infinity
     possMoves = getFreePositions(state)
     newBoard = state.slice(0)
@@ -283,7 +287,7 @@ root.tictactoe.ai = do($) ->
       v = Math.min(v, minVal)
       return v if (v >= beta)
       alpha = Math.max(v, alpha)
-    v
+    return v
 
   # function minValue
   #
@@ -292,7 +296,7 @@ root.tictactoe.ai = do($) ->
   # output: the minimum value of state's successors based on utility()
 
   minValue = (state, depth, alpha, beta, player, firstPlayer) ->
-    utility(state, firstPlayer) if (terminalTest(state) || depth is 0 || winner(state, firstPlayer) || loser(state,firstPlayer))
+    utility(state, firstPlayer) if (terminalTest(state) or depth is 0 or winner(state, firstPlayer) or loser(state,firstPlayer))
     v = Infinity
     passMoves = getFreePositions(state)
     newBoard = state.slice(0)
@@ -303,9 +307,9 @@ root.tictactoe.ai = do($) ->
       v = Math.min(v, maxVal)
       return v if (v <= alpha)
       beta = Math.min(beta, v)
-    v
+    return v
 
-  {
+  return {
     board: -> board
     config: -> config
 

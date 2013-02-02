@@ -1,6 +1,6 @@
 $ = jQuery
 
-main = do($) ->
+main = do ($) ->
 
 	system = tictactoe.ai
 	draw = tictactoe.draw
@@ -29,17 +29,17 @@ main = do($) ->
 		offsetX = if e.offsetX then e.offsetX else (e.pageX - @offsetLeft)
 		offsetY = if e.offsetY then e.offsetY else (e.pageY - @offsetTop)
 
-		location = (Math.floor(offsetY / 100)*3 + Math.floor(offsetX / 100))
+		location = (Math.floor(offsetY / 100) * 3 + Math.floor(offsetX / 100))
 
 		if (offsetY > 300)
 			system.clear()
 			draw.clear()
 			gameOver = false
 
-		else if (offsetY <= 300 && offsetX <= 300)
+		else if (offsetY <= 300 and offsetX <= 300)
 			whoseTurn = system.toMove()
 			occupy = system.occupy(location)
-			if (occupy && !gameOver)
+			if (occupy and not gameOver)
 				draw.nought(location)
 				if (system.winner(1))
 					draw.connectLine(system.winnerWhere(1),"#00ff00")
@@ -49,7 +49,7 @@ main = do($) ->
 					draw.stamp("TIE","#00ffff")
 					gameOver = true
 
-				if (whoseTurn is 1 && !system.winner(1) && !system.winner(-1))
+				if (whoseTurn is 1 and not system.winner(1) and not system.winner(-1))
 					res = system.alphaBetaSearch(system.board(), -whoseTurn)
 
 					# to test win scenario, create ai that randomly chooses a valid turn.

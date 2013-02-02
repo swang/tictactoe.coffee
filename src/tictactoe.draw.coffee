@@ -2,9 +2,9 @@ root = this
 root.tictactoe = {} unless root.tictactoe
 $ = jQuery
 
-root.tictactoe.draw = do($) ->
+root.tictactoe.draw = do ($) ->
 
-  # context = `undefined`
+  context = undefined
   # canvas = `undefined`
   # centerX = `undefined`
   # centerY = `undefined`
@@ -63,8 +63,8 @@ root.tictactoe.draw = do($) ->
   cross = (location) ->
     col = location % 3
     row = Math.floor(location / 3)
-    topLeftX = (col*100)
-    topLeftY = (row*100)
+    topLeftX = (col * 100)
+    topLeftY = (row * 100)
 
     context.beginPath()
 
@@ -84,8 +84,8 @@ root.tictactoe.draw = do($) ->
 
     col = location % 3
     row = Math.floor(location / 3)
-    centerX = (col*100) + 50
-    centerY = (row*100) + 50
+    centerX = (col * 100) + 50
+    centerY = (row * 100) + 50
     radius  = 40
     context.beginPath()
     context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false)
@@ -99,11 +99,11 @@ root.tictactoe.draw = do($) ->
 
     context.save()
 
-    context.rotate(-Math.PI*2 / 12)
-    context.translate(57,190)
+    context.rotate(-Math.PI * 2 / 12)
+    context.translate(57, 190)
     context.beginPath()
-    context.rect(-150, -20, 290 , 80 )
-    context.fillStyle = "rgba(255,255,255,0.75)"
+    context.rect(-150, -20, 290 , 80)
+    context.fillStyle = "rgba(255, 255, 255, 0.75)"
     context.fill()
     context.lineWidth = 5
     context.strokeStyle = color
@@ -144,15 +144,15 @@ root.tictactoe.draw = do($) ->
       modY1 = 50
       modY2 = 50
 
-    if ((fromRow isnt toRow) && (fromCol isnt toCol))
-      modX1 = if (fromRow is fromCol && toRow is toCol) then 20 else 80
-      modX2 = if (fromRow is fromCol && toRow is toCol) then 80 else 20
+    if ((fromRow isnt toRow) and (fromCol isnt toCol))
+      modX1 = if (fromRow is fromCol and toRow is toCol) then 20 else 80
+      modX2 = if (fromRow is fromCol and toRow is toCol) then 80 else 20
 
       modY1 = 20
       modY2 = 80
 
-    context.moveTo( fromCol*100 + modX1, fromRow*100 + modY1)
-    context.lineTo( toCol*100 + modX2  , toRow*100  + modY2 )
+    context.moveTo(fromCol * 100 + modX1, fromRow * 100 + modY1)
+    context.lineTo(toCol * 100 + modX2, toRow * 100  + modY2)
     context.lineCap = "round"
     context.closePath()
 
@@ -162,12 +162,12 @@ root.tictactoe.draw = do($) ->
     context.stroke()
 
   clear = () ->
-    context.clearRect( 0 , 0 , 300, 400 )
+    context.clearRect(0, 0, 300, 400)
     board()
     newGameButton()
     true
 
-  {
+  return {
     setCanvas: setCanvas
     setContext: setContext
 
