@@ -217,17 +217,17 @@ root.tictactoe.ai = do ($) ->
 
       col = [ boardState[r],boardState[r + 3],boardState[r + 6] ]
       if (col.count(player) > 0 and col.count(-player) is 0)
-        score += markScore[ col.count(player) ]
+        score += markScore[col.count(player)]
       else if (col.count(-player) > 0 and col.count(player) is 0)
         score -= markScore[col.count(-player)]
       if (diag1.count(player) > 0 and diag1.count(-player) is 0)
-        score += markScore[ diag1.count(player) ]
+        score += markScore[diag1.count(player)]
       else if (diag1.count(-player) > 0 and diag1.count(player) is 0)
-        score -= markScore[ diag1.count(-player) ]
+        score -= markScore[diag1.count(-player)]
       if (diag2.count(player) > 0 and diag2.count(-player) is 0)
-        score += markScore[ diag2.count(player) ]
+        score += markScore[diag2.count(player)]
       else if (diag2.count(-player) > 0 and diag2.count(player) is 0)
-        score -= markScore[ diag2.count(-player) ]    
+        score -= markScore[diag2.count(-player)]
       r++
     return score
 
@@ -240,7 +240,7 @@ root.tictactoe.ai = do ($) ->
 
   chooseRandom = (state, player) ->
     possMoves = getFreePositions(state)
-    result = possMoves[Math.floor(possMoves.length*Math.random())]
+    result = possMoves[Math.floor(possMoves.length * Math.random())]
     return [player, 1, result]
 
   # function alphaBetaSearch
