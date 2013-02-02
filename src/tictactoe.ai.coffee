@@ -93,6 +93,20 @@ root.tictactoe.ai = do ($) ->
   terminalTest = (boardState = board) ->
     getFreePositions(boardState).length is 0
 
+  # function endState
+  #
+  # returns true if the board is at an end state, either through a winner
+  # or because we have no moves left or the depth amount for the ai has
+  # been reached
+
+  # input: boardState (optional, otherwise returns internal board),
+  #        player
+  # output: true if no more moves can be made
+
+  endState = (boardSt = board, player) ->
+    terminalTest(boardSt) or winner(boardSt, player) or loser(boardSt, player)
+
+
   # function winner
   #
   # determines if player is a winner based on board
@@ -256,7 +270,8 @@ root.tictactoe.ai = do ($) ->
   # output: the value of state's successors based on utility()
 
   negaMax = (state, depth, alpha, beta, player) ->
-    return utility(state, player) if (terminalTest(state) or depth is 0 or winner(state, player) or loser(state, player))
+    if (endState(state, player) or depth is 0)
+      return utility(state, player)
 
     possMoves = getFreePositions(state)
     newBoard = state.slice(0)
@@ -276,7 +291,8 @@ root.tictactoe.ai = do ($) ->
   # output: the maximum value of state's successors based on utility()
 
   maxValue = (state, depth, alpha, beta, player, firstPlayer) ->
-    utility(state, firstPlayer) if (terminalTest(state) or depth is 0 or winner(state, firstPlayer) or loser(state,firstPlayer))
+    if (endState(state, player) or depth is 0)
+      return utility(state, firstPlayer)
     v = -Infinity
     possMoves = getFreePositions(state)
     newBoard = state.slice(0)
@@ -296,7 +312,8 @@ root.tictactoe.ai = do ($) ->
   # output: the minimum value of state's successors based on utility()
 
   minValue = (state, depth, alpha, beta, player, firstPlayer) ->
-    utility(state, firstPlayer) if (terminalTest(state) or depth is 0 or winner(state, firstPlayer) or loser(state,firstPlayer))
+    if (endState(state, player) or depth is 0)
+      return utility(state, firstPlayer)
     v = Infinity
     passMoves = getFreePositions(state)
     newBoard = state.slice(0)
