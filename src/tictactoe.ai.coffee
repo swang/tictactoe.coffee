@@ -145,9 +145,12 @@ root.tictactoe.ai = do ($) ->
     if not player?
       player = boardState
       boardState = board
-    r = 0 
+    r = 0
     while (r < config.rows)
-      return [r*config.rows,(r*config.rows)+config.rows - 1] if boardState.slice(r * config.rows,(r*config.rows) + config.rows).count(player) is config.numToWin
+      sliceStart = r * config.rows
+      sliceEnd = sliceStart + config.rows
+      if boardState.slice(sliceStart, sliceEnd).count(player) is config.numToWin
+        return [r * config.rows,(r * config.rows)+config.rows - 1]
       r++
 
     c = 0
@@ -160,25 +163,32 @@ root.tictactoe.ai = do ($) ->
         iters++
         csub += config.cols
       if (col.count(player) is config.numToWin)
-        return [c, c+(config.cols*(config.numToWin - 1))]
+        return [c, c+(config.cols * (config.numToWin - 1))]
       c++
 
     # written this way so it can handle any sized tictactoe configuration and
     # how many you need to win assuming its just a basic 3x3 box, this will
-    # still just run row*col times
+    # still just run row * col times
 
-    for dc1 in [0..(config.rows - config.numToWin + 1 - 1)]
-      for dr1 in [0..(config.cols - config.numToWin + 1 - 1)]
+    rowsPlusOne = config.rows + 1
+    colsMinusOne = config.cols - 1
+    numToWin = config.numToWin
+    for dc1 in [0..(config.rows - numToWin)]
+      for dr1 in [0..(config.cols - numToWin)]
         diag1 = []
         diag2 = []
-        for dsub in [0..config.numToWin-1]
-          diag1.push( boardState[(dr1*config.cols) + (dsub * (config.rows + 1))])
-          diag2.push( boardState[(dr1*config.cols) + 2 + (dsub*(config.cols - 1))])
-        if diag1.count(player) is config.numToWin
-          return [(dr1*config.cols) + (0*(config.rows+1)), (dr1*config.cols) + ((config.numToWin-1)*(config.rows+1))]
-        if diag2.count(player) is config.numToWin          
-          return [(dr1*config.cols) + 2 +(0*(config.cols-1)),(dr1*config.cols) + 2 + ((config.numToWin-1)*(config.cols-1))]
-    return [-1,-1]
+        rowByTotalCols = dr1 * config.cols
+
+        for dsub in [0..numToWin-1]
+          diag1.push(boardState[rowByTotalCols + (dsub * rowsPlusOne)])
+          diag2.push(boardState[rowByTotalCols + 2 + (dsub * colsMinsOne)])
+        if diag1.count(player) is numToWin
+          return [rowByTotalCols + (0 * rowsPlusOne)
+                , rowByTotalCols + ((numToWin - 1) * rowsPlusOne)]
+        if diag2.count(player) is numToWin
+          return [rowByTotalCols + 2 + (0 * colsMinsOne)
+                , rowByTotalCols + 2 + ((numToWin - 1) * colsMinsOne)]
+    return [-1, -1]
 
   # function utility
   #
@@ -266,7 +276,10 @@ root.tictactoe.ai = do ($) ->
   # function negaMax
   #
   # returns the value of the successors to 'state', part of alphaBetaSearch
-  # input: boardState, current depth, the alpha/beta values, the player currently playing at this state
+  #
+  # input: boardState, current depth, the alpha/beta values, the player
+  # currently playing at this state
+  #
   # output: the value of state's successors based on utility()
 
   negaMax = (state, depth, alpha, beta, player) ->
@@ -287,7 +300,9 @@ root.tictactoe.ai = do ($) ->
   # function maxValue
   #
   # returns the max value the successors to 'state', part of alphaBetaSearch
-  # input: boardState, current depth, the alpha/beta values, the player currently playing at this depth, the original player we are evaluating for
+  # input: boardState, current depth, the alpha/beta values, the player
+  #        currently playing at this depth, the original player we are
+  #        evaluating for
   # output: the maximum value of state's successors based on utility()
 
   maxValue = (state, depth, alpha, beta, player, firstPlayer) ->
@@ -308,7 +323,9 @@ root.tictactoe.ai = do ($) ->
   # function minValue
   #
   # returns the min value the successors to 'state', part of alphaBetaSearch
-  # input: boardState, current depth, the alpha/beta values, the player currently playing at this depth, the original player we are evaluating for
+  # input: boardState, current depth, the alpha/beta values, the player
+  #        currently playing at this depth, the original player we are
+  #        evaluating for
   # output: the minimum value of state's successors based on utility()
 
   minValue = (state, depth, alpha, beta, player, firstPlayer) ->
