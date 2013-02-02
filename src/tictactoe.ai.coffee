@@ -52,10 +52,10 @@ root.tictactoe.ai = do ($) ->
 
   occupy = (location) ->
     if (getFreePositions().indexOf(location) isnt -1)
-       board[location] = toMove()
-       return true
+      board[location] = toMove()
+      return true
     else
-       return false
+      return false
 
   # function clear
   #
@@ -137,7 +137,7 @@ root.tictactoe.ai = do ($) ->
   # a win on the first row for player will return [0,2]
   #
   # input: boardState (optional, otherwise returns internal board), player
-  # output: 2 element array containing the starting location and ending 
+  # output: 2 element array containing the starting location and ending
   #         location of the win
   #         returns [-1,-1] if not found
 
@@ -200,7 +200,7 @@ root.tictactoe.ai = do ($) ->
     r = 0
     while r < config.rows
       row = boardState.slice(r * 3,(r * 3) + 3)
-      if (row.count(player) > 0 and row.count(-player) is 0) 
+      if (row.count(player) > 0 and row.count(-player) is 0)
         score += markScore[row.count(player)]
       else if (row.count(-player) > 0 and row.count(player) is 0)
         score -= markScore[row.count(-player)]
