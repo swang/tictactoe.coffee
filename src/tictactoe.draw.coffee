@@ -78,7 +78,7 @@ root.tictactoe.draw = do ($) ->
 
     context.lineWidth = 5
     context.strokeStyle = "black"
-    context.stroke();        
+    context.stroke()
 
   nought = (location) ->
 
