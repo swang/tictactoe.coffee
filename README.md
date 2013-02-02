@@ -5,6 +5,8 @@ Plays a game of tic-tac-toe using Canvas and Javascript. AI being used is a nega
 
 This is the same version that is in tictactoe.js except that the code has been written in CoffeeScript and then compiled over into javascript.
 
+To compile the CoffeeScript files, run 'coffee -b -o js/ src/' in the main directory
+
 AI Algorithm
 ------------
 At worst the AI will draw a tie against any opponent. However you can replace the version of the AI using negamax alpha-beta pruning with an AI that just randomly picks an open space.
