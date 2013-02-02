@@ -179,13 +179,13 @@ tictactoe.ai = do ($) ->
 
         for dsub in [0..numToWin-1]
           diag1.push(boardState[rowByTotalCols + (dsub * rowsPlusOne)])
-          diag2.push(boardState[rowByTotalCols + 2 + (dsub * colsMinsOne)])
+          diag2.push(boardState[rowByTotalCols + 2 + (dsub * colsMinusOne)])
         if diag1.count(player) is numToWin
           return [rowByTotalCols + (0 * rowsPlusOne)
                 , rowByTotalCols + ((numToWin - 1) * rowsPlusOne)]
         if diag2.count(player) is numToWin
-          return [rowByTotalCols + 2 + (0 * colsMinsOne)
-                , rowByTotalCols + 2 + ((numToWin - 1) * colsMinsOne)]
+          return [rowByTotalCols + 2 + (0 * colsMinusOne)
+                , rowByTotalCols + 2 + ((numToWin - 1) * colsMinusOne)]
     return [-1, -1]
 
   # function utility
