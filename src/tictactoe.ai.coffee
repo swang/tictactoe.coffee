@@ -38,11 +38,11 @@ root.tictactoe.ai = do ($) ->
   toMove = (boardState = board) ->
     player = [0, 0]
     for state in boardState
-      if state is 1
+      if state is players.naughts
         player[0]++
-      else if state is -1
+      else if state is players.cross
         player[1]++
-    if player[0] <= player[1] then return 1 else return -1
+    return if player[0] <= player[1] then players.naughts else players.cross
 
   # function occupy
   #
